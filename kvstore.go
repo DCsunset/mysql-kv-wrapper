@@ -17,7 +17,7 @@ func (s *KVStore) Open(source string) error {
 		return err
 	}
 	s.db = db
-	_, err = db.Exec("create table if not exists kvstore (key varchar(32), value varchar(1024), primary key (key))")
+	_, err = db.Exec("create table if not exists kvstore (k varchar(32), v varchar(1024), primary key (k))")
 	if err != nil {
 		return err
 	}
@@ -33,7 +33,7 @@ func (s *KVStore) Close() error {
 
 func (s *KVStore) Read(key string) (string, error) {
 	var value string
-	err := s.db.QueryRow("select value from kvstore where key = ?", key).Scan(&value)
+	err := s.db.QueryRow("select v from kvstore where k = ?", key).Scan(&value)
 	return value, err
 }
 
