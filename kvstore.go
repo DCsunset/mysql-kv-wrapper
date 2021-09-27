@@ -17,6 +17,12 @@ func (s *KVStore) Open(source string) error {
 		return err
 	}
 	s.db = db
+
+	_, err = db.Exec("create database if not exists kvstore")
+	if err != nil {
+		return err
+	}
+
 	_, err = db.Exec("create table if not exists kvstore (k varchar(32), v varchar(1024), primary key (k))")
 	if err != nil {
 		return err
@@ -38,11 +44,11 @@ func (s *KVStore) Read(key string) (string, error) {
 }
 
 func (s *KVStore) Write(key string, value string) error {
-	stmt, err := s.db.Prepare("replace into kvstore values (?)")
+	stmt, err := s.db.Prepare("replace into kvstore values (?, ?)")
 	if err != nil {
 		return err
 	}
-	_, err = stmt.Exec(value)
+	_, err = stmt.Exec(key, value)
 	if err != nil {
 		return err
 	}
