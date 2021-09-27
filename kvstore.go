@@ -23,6 +23,11 @@ func (s *KVStore) Open(source string) error {
 		return err
 	}
 
+	_, err = db.Exec("use kvstore")
+	if err != nil {
+		return err
+	}
+
 	_, err = db.Exec("create table if not exists kvstore (k varchar(32), v varchar(1024), primary key (k))")
 	if err != nil {
 		return err
