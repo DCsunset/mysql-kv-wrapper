@@ -17,7 +17,7 @@ func (s *KVStore) Open(source string) error {
 		return err
 	}
 	s.db = db
-	_, err = db.Exec("create table kvstore if not exists (key varchar(32), value varchar(1024), primary key (key))")
+	_, err = db.Exec("create table if not exists kvstore (key varchar(32), value varchar(1024), primary key (key))")
 	if err != nil {
 		return err
 	}
