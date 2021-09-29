@@ -51,19 +51,9 @@ func (s *KVStore) Begin() (*KVTxn, error) {
 }
 
 func (s *KVStore) Read(key string) (string, error) {
-	var value string
-	err := s.db.QueryRow("select v from kvstore where k = ?", key).Scan(&value)
-	return value, err
+	return Read(s.db, key)
 }
 
 func (s *KVStore) Write(key string, value string) error {
-	stmt, err := s.db.Prepare("replace into kvstore values (?, ?)")
-	if err != nil {
-		return err
-	}
-	_, err = stmt.Exec(key, value)
-	if err != nil {
-		return err
-	}
-	return nil
+	return Write(s.db, key, value)
 }
