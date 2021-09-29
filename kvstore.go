@@ -42,6 +42,14 @@ func (s *KVStore) Close() error {
 	return nil
 }
 
+func (s *KVStore) Begin() (*KVTxn, error) {
+	txn, err := s.db.Begin()
+	if err != nil {
+		return nil, err
+	}
+	return &KVTxn{txn}, nil
+}
+
 func (s *KVStore) Read(key string) (string, error) {
 	var value string
 	err := s.db.QueryRow("select v from kvstore where k = ?", key).Scan(&value)
